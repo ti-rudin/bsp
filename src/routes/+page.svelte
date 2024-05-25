@@ -15,7 +15,7 @@
 	let ymatrixreverse = [];
 
 	const even = (n) => !(n % 2);
-	init = `G01 F2222 X0<br>\nG04 P3<br>\nG01 F2222 Y0<br>\nG04 P3<br>\n`
+	init = `G01 F2222 X0<br>\nG04 P3<br>\nG01 F2222 Y0<br>\nG04 P3<br>\n`;
 	const calculate = (init, x, y, p, step, d, zatvor) => {
 		let xcount = Math.floor(x / step) + 1;
 		let ycount = Math.floor(y / step) + 1;
@@ -23,9 +23,8 @@
 		xmatrix.length = xcount;
 		for (let index = 0; index < xmatrix.length; index++) {
 			xmatrix[index] = index + 1;
-			xmatrixreverse[index] = xcount - index-1;
+			xmatrixreverse[index] = xcount - index - 1;
 		}
-		xmatrixreverse.length = xmatrixreverse.length-1;
 
 		ymatrix.length = ycount;
 		for (let index = 0; index < ymatrix.length; index++) {
@@ -35,7 +34,14 @@
 
 		rez = init + '<br>\n';
 
-		for (let index = 1; index < ycount; index++) {
+		for (let index = 0; index <= ycount; index++) {
+			let ytoken = '';
+			let yntoken = '';
+		
+				yntoken = index * step;
+				ytoken = `G01 F${d} Y${yntoken}<br>\nG04 P${p}<br>\n`;
+				rez = rez + ytoken + zatvor;
+				rez = `<br>\n` + rez + `<br>\n`;
 			if (!even(index)) {
 				for (let i = 0; i < xmatrix.length; i++) {
 					const element = xmatrix[i];
@@ -64,13 +70,8 @@
 				}
 			}
 
-			let ytoken = '';
-			let yntoken = '';
-
-			yntoken = index * step;
-			ytoken = `G01 F${d} Y${yntoken}<br>\nG04 P${p}<br>\n`;
-			rez = rez + ytoken + zatvor;
-			rez = `<br>\n` +rez + `<br>\n`;
+	
+			
 		}
 
 		console.log(rez);
