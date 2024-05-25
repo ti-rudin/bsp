@@ -1,18 +1,80 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
-	let x,
+	let init,
+		x,
 		y,
 		z,
-		s,
-		d = '';
+		step,
+		d,
+		zatvor = `G01 F1000 Z0\nG01 F1000 Z10`;
 
-	let rez = '';
+	let rez;
+	let rezready = false;
+	let xmatrix = [];
+	let xmatrixreverse = [];
+	let ymatrix = [];
+	let ymatrixreverse = [];
 
-	const calculate = (x, y, z, s, d) => {
-		console.log(Number(x) + Number(y) + Number(z));
-		rez = Number(x) + Number(y) + Number(z) + Number(s) + Number(d);
+	const even = (n) => !(n % 2);
+	init = `G01 F2222 X0\nG04 P3\nG01 F2222 Y0\nG04 P3\n`
+	const calculate = (init, x, y, z, step, d, zatvor) => {
+		let xcount = Math.floor(x / step) + 1;
+		let ycount = Math.floor(y / step) + 1;
+
+		xmatrix.length = xcount;
+		for (let index = 0; index < xmatrix.length; index++) {
+			xmatrix[index] = index + 1;
+			xmatrixreverse[index] = xcount - index;
+		}
+
+		ymatrix.length = ycount;
+		for (let index = 0; index < ymatrix.length; index++) {
+			ymatrix[index] = index + 1;
+			ymatrixreverse[index] = ycount - index;
+		}
+
+		rez = init + '<br>\n';
+
+		for (let index = 1; index < ycount; index++) {
+			if (!even(index)) {
+				for (let i = 0; i < xmatrix.length; i++) {
+					const element = xmatrix[i];
+					let token = '';
+					let ntoken = '';
+
+					ntoken = element * step;
+
+					token = `G01 F${d} X${ntoken}<br>\nG04 P3<br>\n`;
+					token = token + zatvor;
+					rez = rez + token;
+					rez = rez + `<br>\n`;
+				}
+			} else {
+				for (let i = 0; i < xmatrixreverse.length; i++) {
+					const element = xmatrixreverse[i];
+					let token = '';
+					let ntoken = '';
+
+					ntoken = element * step;
+
+					token = `G01 F${d} X${ntoken}<br>\nG04 P3<br>\n`;
+					token = token + zatvor;
+					rez = rez + token;
+					rez = rez + `<br>\n`;
+				}
+			}
+
+			let ytoken = '';
+			let yntoken = '';
+
+			yntoken = index * step;
+			ytoken = `G01 F${d} Y${yntoken}<br>\nG04 P3<br>\n`;
+			rez = rez + ytoken;
+			rez = `<br>\n` +rez + `<br>\n`;
+		}
+
+		console.log(rez);
+
+		rezready = true;
 	};
 </script>
 
@@ -22,31 +84,42 @@
 </svelte:head>
 
 <section>
-	<div class="inp">
-		<div class="sp">Длина</div>
-		<input bind:value={x} />
-	</div>
-	<div class="inp">
-		<div class="sp">Ширина</div>
-		<input bind:value={y} />
-	</div>
-	<div class="inp">
-		<div class="sp">Глубина</div>
-		<input bind:value={z} />
-	</div>
-	<div class="inp">
-		<div class="sp">Шаг</div>
-		<input bind:value={s} />
-	</div>
-	<div class="inp">
-		<div class="sp">Cкорость</div>
-		<input bind:value={d} />
-	</div>
-	
+	{#if true}
+		<div class="inp">
+			<div class="sp">Инициализация</div>
+			<textarea rows="4" bind:value={init} />
+		</div>
+		<div class="inp">
+			<div class="sp">Длина</div>
+			<input bind:value={x} />
+		</div>
+		<div class="inp">
+			<div class="sp">Ширина</div>
+			<input bind:value={y} />
+		</div>
+		<div class="inp">
+			<div class="sp">Глубина</div>
+			<input bind:value={z} />
+		</div>
+		<div class="inp">
+			<div class="sp">Шаг</div>
+			<input bind:value={step} />
+		</div>
+		<div class="inp">
+			<div class="sp">Cкорость</div>
+			<input bind:value={d} />
+		</div>
 
-	<button class="btn" on:click={calculate(x, y, z, s, d)}>Go</button>
+		<div class="inp">
+			<div class="sp">Команда затвора</div>
+			<textarea rows="4" bind:value={zatvor} />
+		</div>
 
-	<p>{rez}</p>
+		<button class="btn" on:click={calculate(init, x, y, z, step, d, zatvor)}>Go</button>
+	{/if}
+	{#if rezready}
+		<div>{@html rez}</div>
+	{/if}
 </section>
 
 <style>
@@ -57,9 +130,9 @@
 		align-items: center;
 		flex: 0.6;
 	}
-.sp{
-	width: 3rem;
-}
+	.sp {
+		width: 3rem;
+	}
 	.inp {
 		display: block;
 		margin: 5px;
