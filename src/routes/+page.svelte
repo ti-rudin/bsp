@@ -84,7 +84,7 @@
 </svelte:head>
 
 <section>
-	{#if true}
+	{#if !rezready}
 		<div class="inp">
 			<div class="sp">Инициализация</div>
 			<textarea rows="4" bind:value={init} />
@@ -118,7 +118,7 @@
 		<button class="btn" on:click={calculate(init, x, y, z, step, d, zatvor)}>Go</button>
 	{/if}
 	{#if rezready}
-		<div>{@html rez}</div>
+		{@html rez}
 	{/if}
 </section>
 
