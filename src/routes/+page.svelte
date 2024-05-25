@@ -23,8 +23,9 @@
 		xmatrix.length = xcount;
 		for (let index = 0; index < xmatrix.length; index++) {
 			xmatrix[index] = index + 1;
-			xmatrixreverse[index] = xcount - index;
+			xmatrixreverse[index] = xcount - index-1;
 		}
+		xmatrixreverse.length = xmatrixreverse.length-1;
 
 		ymatrix.length = ycount;
 		for (let index = 0; index < ymatrix.length; index++) {
@@ -68,7 +69,7 @@
 
 			yntoken = index * step;
 			ytoken = `G01 F${d} Y${yntoken}<br>\nG04 P${p}<br>\n`;
-			rez = rez + ytoken;
+			rez = rez + ytoken + zatvor;
 			rez = `<br>\n` +rez + `<br>\n`;
 		}
 
