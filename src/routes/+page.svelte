@@ -2,10 +2,10 @@
 	let init,
 		x,
 		y,
-		z,
+		p,
 		step,
 		d,
-		zatvor = `G01 F1000 Z0\nG01 F1000 Z10`;
+		zatvor = `G01 F1000 Z0<br>\nG01 F1000 Z10<br>\n`;
 
 	let rez;
 	let rezready = false;
@@ -15,8 +15,8 @@
 	let ymatrixreverse = [];
 
 	const even = (n) => !(n % 2);
-	init = `G01 F2222 X0\nG04 P3\nG01 F2222 Y0\nG04 P3\n`
-	const calculate = (init, x, y, z, step, d, zatvor) => {
+	init = `G01 F2222 X0<br>\nG04 P3<br>\nG01 F2222 Y0<br>\nG04 P3<br>\n`
+	const calculate = (init, x, y, p, step, d, zatvor) => {
 		let xcount = Math.floor(x / step) + 1;
 		let ycount = Math.floor(y / step) + 1;
 
@@ -43,7 +43,7 @@
 
 					ntoken = element * step;
 
-					token = `G01 F${d} X${ntoken}<br>\nG04 P3<br>\n`;
+					token = `G01 F${d} X${ntoken}<br>\nG04 P${p}<br>\n`;
 					token = token + zatvor;
 					rez = rez + token;
 					rez = rez + `<br>\n`;
@@ -56,7 +56,7 @@
 
 					ntoken = element * step;
 
-					token = `G01 F${d} X${ntoken}<br>\nG04 P3<br>\n`;
+					token = `G01 F${d} X${ntoken}<br>\nG04 P${p}<br>\n`;
 					token = token + zatvor;
 					rez = rez + token;
 					rez = rez + `<br>\n`;
@@ -98,8 +98,8 @@
 			<input bind:value={y} />
 		</div>
 		<div class="inp">
-			<div class="sp">Глубина</div>
-			<input bind:value={z} />
+			<div class="sp">Пауза</div>
+			<input bind:value={p} />
 		</div>
 		<div class="inp">
 			<div class="sp">Шаг</div>
@@ -115,7 +115,7 @@
 			<textarea rows="4" bind:value={zatvor} />
 		</div>
 
-		<button class="btn" on:click={calculate(init, x, y, z, step, d, zatvor)}>Go</button>
+		<button class="btn" on:click={calculate(init, x, y, p, step, d, zatvor)}>Go</button>
 	{/if}
 	{#if rezready}
 		{@html rez}
