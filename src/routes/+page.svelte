@@ -67,7 +67,7 @@
 			let yntoken = '';
 
 			yntoken = index * step;
-			ytoken = `G01 F${d} Y${yntoken}<br>\nG04 P3<br>\n`;
+			ytoken = `G01 F${d} Y${yntoken}<br>\nG04 P${p}<br>\n`;
 			rez = rez + ytoken;
 			rez = `<br>\n` +rez + `<br>\n`;
 		}
